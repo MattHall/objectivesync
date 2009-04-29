@@ -30,7 +30,7 @@
 	for (OSYLog *log in created) {
 		Class cls = [[NSBundle mainBundle] classNamed:log.loggedClassName];
 		id obj = [cls findByPK:log.loggedPk];
-		if ([obj saveORS]) {
+		if ([obj saveRemote]) {
 			[obj save];
 			[log deleteObject];
 		}
@@ -42,8 +42,8 @@
 	for (OSYLog *log in deleted) {
 		Class cls = [[NSBundle mainBundle] classNamed:log.loggedClassName];
 		id obj = [[[cls alloc] init] autorelease];
-		[obj setORSId:log.remoteId];
-		if ([obj destroyORS]) {
+		[obj setRemoteId:log.remoteId];
+		if ([obj destroyRemote]) {
 			[log deleteObject];
 		}
 	}

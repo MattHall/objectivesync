@@ -256,7 +256,7 @@ static id<ORCDataChangedDelegate>__delegate;
 	NSString *deleteQuery = [NSString stringWithFormat:@"DELETE FROM %@ WHERE pk = %d", [[self class] tableName], pk];
 		
 	[[SQLiteInstanceManager sharedManager] executeQuery:deleteQuery];
-	[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getORSId] was:DeletedAction];
+	[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
 
 }
 #pragma mark -
