@@ -8,14 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OSYSyncDelegate.h"
+#import "CollectionViewController.h"
 
-@interface NoteListController : UITableViewController <OSYSyncDelegate> {
-
+@interface NoteListController : CollectionViewController <OSYSyncDelegate> {
 	NSMutableArray *notes;
-	
 }
-
-- (IBAction) addButtonPressed;
 
 @property(nonatomic, retain) NSMutableArray *notes;
 

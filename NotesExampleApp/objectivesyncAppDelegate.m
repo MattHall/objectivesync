@@ -9,6 +9,7 @@
 #import "objectivesyncAppDelegate.h"
 #import "OSYService.h"
 #import "ObjectiveResource.h"
+#import "CWToolbarController.h"
 
 @implementation objectivesyncAppDelegate
 
@@ -19,7 +20,10 @@
 	[OSYService setupWithSyncDelegate:(id)noteListController];
 	
     // Override point for customization after application launch
-	[window addSubview:navigationController.view];
+	CWToolbarController* toolbarController = [[CWToolbarController alloc] initWithContentViewController:navigationController];
+	[window addSubview:[toolbarController view]];
+	
+	//[window addSubview:navigationController.view];
     [window makeKeyAndVisible];
 }
 

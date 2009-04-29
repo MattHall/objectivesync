@@ -14,34 +14,33 @@
 
 @synthesize notes;
 
-
-- (IBAction) addButtonPressed {
+- (void) addButtonPressed {
 	NoteEditController *editor = [[[NoteEditController alloc] initWithNibName:@"NoteEdit" bundle:nil] autorelease];
 	editor.note = [[[Note alloc] init] autorelease];
 	[notes addObject:editor.note];
 	[self.navigationController pushViewController:editor animated:YES];
 }
 
-- (void) loadNotes {
+- (void) asyncLoadCollection {
 	self.notes = [NSMutableArray arrayWithArray:[Note findByCriteria:@""]];
+	
+	[super asyncLoadCollection];
 }
 
 #pragma mark OSYSyncDelegate methods
 - (void) syncCompleteWithSuccess:(BOOL)success {
 	if (success) {
-		[self loadNotes];
+		[self asyncLoadCollection];
 	}
 }
 
 #pragma mark UIViewController methods
 - (void)viewDidLoad {
-	[self loadNotes];
+	[super viewDidLoad];
+	self.title = @"Notes";
+	
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-
-- (void)viewDidAppear:(BOOL)animated {
-	[self.tableView reloadData];
-}
-
 
 #pragma mark Table view methods
 
@@ -64,11 +63,13 @@
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[aTableView beginUpdates];
+		
 		[aTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
 						  withRowAnimation:YES];		
 		Note *note = [notes objectAtIndex:indexPath.row];
 		[note deleteObject];
 		[notes removeObject:note];
+		
 		[aTableView endUpdates];
 	}
 	

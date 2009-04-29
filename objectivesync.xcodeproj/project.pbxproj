@@ -62,6 +62,9 @@
 		D0D8FB0E0FA90F5100211D36 /* NSNull+XMLSerializableSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FAE20FA90F5100211D36 /* NSNull+XMLSerializableSupport.m */; };
 		D0D8FB0F0FA90F5100211D36 /* NSObject+XMLSerializableSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FAE40FA90F5100211D36 /* NSObject+XMLSerializableSupport.m */; };
 		D0D8FB100FA90F5100211D36 /* NSString+XMLSerializableSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FAE60FA90F5100211D36 /* NSString+XMLSerializableSupport.m */; };
+		D0D8FB650FA914D600211D36 /* CWToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FB640FA914D600211D36 /* CWToolbarController.m */; };
+		D0D8FB6E0FA9161C00211D36 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FB6D0FA9161C00211D36 /* CollectionViewController.m */; };
+		D0D8FB730FA9169200211D36 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FB720FA9169200211D36 /* LoadingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -182,6 +185,12 @@
 		D0D8FAE60FA90F5100211D36 /* NSString+XMLSerializableSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+XMLSerializableSupport.m"; sourceTree = "<group>"; };
 		D0D8FAE70FA90F5100211D36 /* XMLSerializable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLSerializable.h; sourceTree = "<group>"; };
 		D0D8FAE80FA90F5100211D36 /* XMLSerializableSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLSerializableSupport.h; sourceTree = "<group>"; };
+		D0D8FB630FA914D600211D36 /* CWToolbarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWToolbarController.h; sourceTree = "<group>"; };
+		D0D8FB640FA914D600211D36 /* CWToolbarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWToolbarController.m; sourceTree = "<group>"; };
+		D0D8FB6C0FA9161C00211D36 /* CollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
+		D0D8FB6D0FA9161C00211D36 /* CollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
+		D0D8FB710FA9169200211D36 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		D0D8FB720FA9169200211D36 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,7 +242,10 @@
 		35C67BC90F2FB728005FF6CE /* NotesExampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				35C67BF50F2FB889005FF6CE /* Classes */,
+				D0D8FB620FA914CD00211D36 /* lib */,
+				D0D8FB7A0FA9180500211D36 /* Models */,
+				D0D8FB700FA9168800211D36 /* Views */,
+				D0D8FB790FA917F000211D36 /* Controllers */,
 				35C67BF60F2FB893005FF6CE /* Resources */,
 				35C67BE40F2FB7E7005FF6CE /* Info.plist */,
 				35C67BCB0F2FB728005FF6CE /* main.m */,
@@ -242,19 +254,6 @@
 				35C67BF10F2FB854005FF6CE /* objectivesync_Prefix.pch */,
 			);
 			path = NotesExampleApp;
-			sourceTree = "<group>";
-		};
-		35C67BF50F2FB889005FF6CE /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				35C67C0A0F2FB8D3005FF6CE /* Note.h */,
-				35C67C0B0F2FB8D3005FF6CE /* Note.m */,
-				35C67C660F2FC0F5005FF6CE /* NoteEditController.h */,
-				35C67C670F2FC0F5005FF6CE /* NoteEditController.m */,
-				35C67BCD0F2FB728005FF6CE /* NoteListController.h */,
-				35C67BCE0F2FB728005FF6CE /* NoteListController.m */,
-			);
-			name = Classes;
 			sourceTree = "<group>";
 		};
 		35C67BF60F2FB893005FF6CE /* Resources */ = {
@@ -459,6 +458,46 @@
 			path = XML;
 			sourceTree = "<group>";
 		};
+		D0D8FB620FA914CD00211D36 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				D0D8FB6C0FA9161C00211D36 /* CollectionViewController.h */,
+				D0D8FB6D0FA9161C00211D36 /* CollectionViewController.m */,
+				D0D8FB630FA914D600211D36 /* CWToolbarController.h */,
+				D0D8FB640FA914D600211D36 /* CWToolbarController.m */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		D0D8FB700FA9168800211D36 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D0D8FB710FA9169200211D36 /* LoadingView.h */,
+				D0D8FB720FA9169200211D36 /* LoadingView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		D0D8FB790FA917F000211D36 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				35C67C660F2FC0F5005FF6CE /* NoteEditController.h */,
+				35C67C670F2FC0F5005FF6CE /* NoteEditController.m */,
+				35C67BCD0F2FB728005FF6CE /* NoteListController.h */,
+				35C67BCE0F2FB728005FF6CE /* NoteListController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		D0D8FB7A0FA9180500211D36 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				35C67C0A0F2FB8D3005FF6CE /* Note.h */,
+				35C67C0B0F2FB8D3005FF6CE /* Note.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -562,6 +601,9 @@
 				D0D8FB0E0FA90F5100211D36 /* NSNull+XMLSerializableSupport.m in Sources */,
 				D0D8FB0F0FA90F5100211D36 /* NSObject+XMLSerializableSupport.m in Sources */,
 				D0D8FB100FA90F5100211D36 /* NSString+XMLSerializableSupport.m in Sources */,
+				D0D8FB650FA914D600211D36 /* CWToolbarController.m in Sources */,
+				D0D8FB6E0FA9161C00211D36 /* CollectionViewController.m in Sources */,
+				D0D8FB730FA9169200211D36 /* LoadingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
