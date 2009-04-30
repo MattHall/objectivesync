@@ -57,7 +57,15 @@
     }
 	
 	cell.text = [[notes objectAtIndex:indexPath.row] noteText];
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	NoteEditController *editor = [[[NoteEditController alloc] initWithNibName:@"NoteEdit" bundle:nil] autorelease];
+	editor.note = (Note *)[notes objectAtIndex:indexPath.row];
+	[self.navigationController pushViewController:editor animated:YES];
 }
 
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
