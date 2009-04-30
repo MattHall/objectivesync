@@ -32,6 +32,7 @@
 
 //finders
 +(NSArray *)newlyCreated;
++(NSArray *)newlyUpdated;
 +(NSArray *)newlyDeleted;
 
 @end

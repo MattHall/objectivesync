@@ -192,7 +192,11 @@ static id<ORCDataChangedDelegate>__delegate;
 {
 	return pk;
 }
--(void)save
+-(void)save {
+	[self saveWithSync:YES];
+}
+
+-(void)saveWithSync:(BOOL)sync
 {
 	[[self class] tableCheck];
 	
@@ -249,6 +253,8 @@ static id<ORCDataChangedDelegate>__delegate;
 	[[SQLiteInstanceManager sharedManager] executeQuery:updateSQL substitutions:substitutions];
 	if (isNew) {
 		[__delegate objectOfClass:self.class withPk:pk andRemoteId:nil was:CreatedAction];
+	} else {
+		if (sync) [__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:UpdatedAction];
 	}
 
 }

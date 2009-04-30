@@ -27,6 +27,9 @@
 +(NSArray *)newlyCreated {
 	return [self findByAction:CreatedAction];
 }
++(NSArray *)newlyUpdated {
+	return [self findByAction:UpdatedAction];
+}
 +(NSArray *)newlyDeleted {
 	return [self findByAction:DeletedAction];
 }

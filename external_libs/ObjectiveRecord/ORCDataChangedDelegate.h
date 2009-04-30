@@ -10,6 +10,7 @@
 typedef enum {
 	CreatedAction = 1,
 	DeletedAction = 2,
+	UpdatedAction = 3
 } ORCActionTypes;
 
 @protocol ORCDataChangedDelegate

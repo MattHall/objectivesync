@@ -38,7 +38,7 @@
 
 @interface SQLitePersistentObject : NSObject {
 
-	NSInteger	pk;	
+	NSInteger	pk;
 
 }
 /*!
@@ -115,6 +115,8 @@
  //TODO: Look at adding recursion of some form to allow collection objects within collection objects to be stored in a normalized fashion
  */
 -(void)save;
+
+-(void)saveWithSync:(BOOL)sync;
 
 /*!
  Returns this objects primary key
