@@ -230,7 +230,14 @@ static id<ORCDataChangedDelegate>__delegate;
 		{
 			NSString *columnName = [propName stringAsSQLColumnName];
 			[updateSQL appendFormat:@", %@", columnName];
-			[substitutions setValue:[self valueForKey:propName] forKey:columnName];
+			if ([self valueForKey:propName]!=nil) {
+				[substitutions setValue:[self valueForKey:propName] forKey:columnName];
+			} else {
+				SEL selector = NSSelectorFromString(propName);
+				if ([self respondsToSelector:selector]) {
+					[substitutions setValue:[self performSelector:selector] forKey:columnName];
+				}
+			}
 			[bindSQL appendFormat:@", :%@",columnName];
 		}
 	}
@@ -254,7 +261,7 @@ static id<ORCDataChangedDelegate>__delegate;
 	[[self class] tableCheck];
 		
 	NSString *deleteQuery = [NSString stringWithFormat:@"DELETE FROM %@ WHERE pk = %d", [[self class] tableName], pk];
-		
+	
 	[[SQLiteInstanceManager sharedManager] executeQuery:deleteQuery];
 	[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
 

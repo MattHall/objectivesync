@@ -30,7 +30,7 @@
 #pragma mark OSYSyncDelegate methods
 - (void) syncCompleteWithSuccess:(BOOL)success {
 	if (success) {
-		[self asyncLoadCollection];
+		[self loadCollection];
 	}
 }
 
@@ -55,6 +55,7 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
     }
+	
 	cell.text = [[notes objectAtIndex:indexPath.row] noteText];
     return cell;
 }

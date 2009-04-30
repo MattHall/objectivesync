@@ -22,6 +22,7 @@
 #import "/usr/include/sqlite3.h"
 #import <objc/runtime.h>
 #import "ORCDataChangedDelegate.h"
+#import "ObjectiveResource.h"
 
 #define isNSArrayType(x) ([x isEqualToString:@"NSArray"] || [x isEqualToString:@"NSMutableArray"])
 #define isNSDictionaryType(x) ([x isEqualToString:@"NSDictionary"] || [x isEqualToString:@"NSMutableDictionary"])

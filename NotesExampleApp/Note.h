@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SQLitePersistentObject.h"
+#import "ObjectiveResource.h"
 
 @interface Note : SQLitePersistentObject {
 
