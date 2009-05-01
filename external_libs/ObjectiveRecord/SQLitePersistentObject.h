@@ -65,6 +65,7 @@
  Deletes this object's corresponding row from the database table. This version does NOT cascade to child objects in other tables.
  */
 -(void)deleteObject;
+-(void)deleteObjectWithSync:(BOOL)sync;
 
 /*!
  This is just a convenience routine; in several places we have to iterate through the properties and take some action based
@@ -122,5 +123,8 @@
  Returns this objects primary key
  */
 -(int)pk;
+
+// Making this public for syncing
+- (void)setPk:(int)newPk;
 
 @end

@@ -9,6 +9,7 @@
 #import "NoteListController.h"
 #import "Note.h"
 #import "NoteEditController.h"
+#import "OSYSync.h"
 
 @implementation NoteListController
 
@@ -22,16 +23,28 @@
 }
 
 - (void) asyncLoadCollection {
-	self.notes = [NSMutableArray arrayWithArray:[Note findByCriteria:@""]];
+	OSYSync *sync = [[OSYSync alloc] init];
+	NSError *error = [[NSError alloc] init];
+	NSNumber *status = [[NSNumber alloc] init];
+	[sync runSync];
+	NSArray *remote = [Note findAllRemoteWithResponse:&error];
+	self.notes = [sync runCollectionSyncWithLocal:[Note findByCriteria:@""] 
+										andRemote:remote
+										withError:error
+										status:&status];
+	NSLog(@"%d", error.code);
 	
-	[super asyncLoadCollection];
+	[sync release];
+	[error release];
+	
+	[status retain];
+	
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(loadCompleted:) withObject:status waitUntilDone:NO];
 }
 
-#pragma mark OSYSyncDelegate methods
-- (void) syncCompleteWithSuccess:(BOOL)success {
-	if (success) {
-		[self loadCollection];
-	}
+- (void) loadCompleted:(NSNumber *)status {
+	[self.loadingView stopAnimating:status];
 }
 
 #pragma mark UIViewController methods
@@ -81,7 +94,6 @@
 		
 		[aTableView endUpdates];
 	}
-	
 	
 }
 

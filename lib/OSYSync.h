@@ -10,9 +10,9 @@
 
 
 @interface OSYSync : NSObject {
-
 }
 
 -(void)runSync;
+-(NSMutableArray *)runCollectionSyncWithLocal:(NSArray *)local andRemote:(NSArray *)remote withError:(NSError *)error status:(NSNumber **)status;
 
 @end

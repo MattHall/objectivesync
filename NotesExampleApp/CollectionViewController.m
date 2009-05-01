@@ -17,8 +17,8 @@
 	[self.loadingView startAnimating];
 }
 
-- (void) loadCompleted {
-	[self.loadingView stopAnimating];
+- (void) loadCompleted:(NSNumber *)status {
+	[self.loadingView stopAnimating:status];
 }
 
 - (void) loadCollection {
@@ -27,8 +27,13 @@
 }
 
 - (void) asyncLoadCollection {
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-	[self performSelectorOnMainThread:@selector(loadCompleted) withObject:nil waitUntilDone:NO];
+	
+}
+
+- (void) syncCompleteWithSuccess:(BOOL)success {
+	if (success) {
+		[self loadCollection];
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OSYSyncDelegate.h"
 #import "LoadingView.h"
 
-@interface CollectionViewController : UITableViewController {
+@interface CollectionViewController : UITableViewController <OSYSyncDelegate> {
 	NSArray *toolbarItems;
 	LoadingView *loadingView;
 }
@@ -18,7 +19,7 @@
 @property (retain) LoadingView *loadingView;
 
 - (void) loadStarted;
-- (void) loadCompleted;
+- (void) loadCompleted:(NSNumber *)status;
 - (void) loadCollection;
 - (void) asyncLoadCollection;
 - (NSArray *) setupToolbarItems;

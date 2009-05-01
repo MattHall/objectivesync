@@ -14,10 +14,16 @@
 
 	NSString *noteText;
 	NSString *noteId;
+	NSDate *updatedAt;
+	NSDate *createdAt;
 	
 }
 
 @property(nonatomic, retain) NSString *noteText;
 @property(nonatomic, retain) NSString *noteId;
+@property(nonatomic, retain) NSDate *createdAt;
+@property(nonatomic, retain) NSDate *updatedAt;
+
+-(void)merge:(Note *)with;
 
 @end

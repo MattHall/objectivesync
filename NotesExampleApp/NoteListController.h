@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OSYSyncDelegate.h"
 #import "CollectionViewController.h"
 
-@interface NoteListController : CollectionViewController <OSYSyncDelegate> {
+@interface NoteListController : CollectionViewController {
 	NSMutableArray *notes;
 }
 

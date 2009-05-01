@@ -61,7 +61,6 @@ id findByMethodImp(id self, SEL _cmd, id value)
 
 @interface SQLitePersistentObject (private)
 + (void)tableCheck;
-- (void)setPk:(int)newPk;
 + (NSString *)classNameForTableName:(NSString *)theTable;
 + (void)setUpDynamicMethods;
 @end
@@ -251,7 +250,7 @@ static id<ORCDataChangedDelegate>__delegate;
 	
 
 	[[SQLiteInstanceManager sharedManager] executeQuery:updateSQL substitutions:substitutions];
-	if (isNew) {
+	if (isNew&&sync) {
 		[__delegate objectOfClass:self.class withPk:pk andRemoteId:nil was:CreatedAction];
 	} else {
 		if (sync) [__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:UpdatedAction];
@@ -264,12 +263,17 @@ static id<ORCDataChangedDelegate>__delegate;
 }
 -(void)deleteObject
 {
+	[self deleteObjectWithSync:YES];
+}
+
+-(void)deleteObjectWithSync:(BOOL)sync
+{
 	[[self class] tableCheck];
 		
 	NSString *deleteQuery = [NSString stringWithFormat:@"DELETE FROM %@ WHERE pk = %d", [[self class] tableName], pk];
 	
 	[[SQLiteInstanceManager sharedManager] executeQuery:deleteQuery];
-	[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
+	if (sync) [__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
 
 }
 #pragma mark -
