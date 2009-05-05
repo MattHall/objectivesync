@@ -22,6 +22,11 @@
 		35C67D690F3087EE005FF6CE /* OSYDataChangedDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C67D680F3087EE005FF6CE /* OSYDataChangedDelegate.m */; };
 		35C67DB00F308CA0005FF6CE /* OSYLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C67DAF0F308CA0005FF6CE /* OSYLog.m */; };
 		35C67DC10F308FE1005FF6CE /* OSYService.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C67DC00F308FE1005FF6CE /* OSYService.m */; };
+		D0D801B80FAF3FE900211D36 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D801B70FAF3FE900211D36 /* Person.m */; };
+		D0D801BB0FAF414B00211D36 /* PersonListController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D801BA0FAF414B00211D36 /* PersonListController.m */; };
+		D0D801D40FAF456200211D36 /* PersonEdit.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0D801D30FAF456200211D36 /* PersonEdit.xib */; };
+		D0D801D80FAF45FD00211D36 /* PersonEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D801D70FAF45FD00211D36 /* PersonEditController.m */; };
+		D0D802BF0FAF65BD00211D36 /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D802BE0FAF65BD00211D36 /* PersonViewController.m */; };
 		D0D8FAE90FA90F5100211D36 /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FA870FA90F5100211D36 /* NSData-SQLitePersistence.m */; };
 		D0D8FAEA0FA90F5100211D36 /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FA890FA90F5100211D36 /* NSDate-SQLitePersistence.m */; };
 		D0D8FAEB0FA90F5100211D36 /* NSMutableData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D8FA8B0FA90F5100211D36 /* NSMutableData-SQLitePersistence.m */; };
@@ -95,6 +100,15 @@
 		35C67DAF0F308CA0005FF6CE /* OSYLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSYLog.m; sourceTree = "<group>"; };
 		35C67DBF0F308FE1005FF6CE /* OSYService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSYService.h; sourceTree = "<group>"; };
 		35C67DC00F308FE1005FF6CE /* OSYService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSYService.m; sourceTree = "<group>"; };
+		D0D801B60FAF3FE900211D36 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		D0D801B70FAF3FE900211D36 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		D0D801B90FAF414B00211D36 /* PersonListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonListController.h; sourceTree = "<group>"; };
+		D0D801BA0FAF414B00211D36 /* PersonListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonListController.m; sourceTree = "<group>"; };
+		D0D801D30FAF456200211D36 /* PersonEdit.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonEdit.xib; sourceTree = "<group>"; };
+		D0D801D60FAF45FD00211D36 /* PersonEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonEditController.h; sourceTree = "<group>"; };
+		D0D801D70FAF45FD00211D36 /* PersonEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonEditController.m; sourceTree = "<group>"; };
+		D0D802BD0FAF65BD00211D36 /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
+		D0D802BE0FAF65BD00211D36 /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonViewController.m; sourceTree = "<group>"; };
 		D0D8FA860FA90F5100211D36 /* NSData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-SQLitePersistence.h"; sourceTree = "<group>"; };
 		D0D8FA870FA90F5100211D36 /* NSData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-SQLitePersistence.m"; sourceTree = "<group>"; };
 		D0D8FA880FA90F5100211D36 /* NSDate-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-SQLitePersistence.h"; sourceTree = "<group>"; };
@@ -261,6 +275,7 @@
 			children = (
 				35C67BEE0F2FB824005FF6CE /* MainWindow.xib */,
 				35C67C600F2FC063005FF6CE /* NoteEdit.xib */,
+				D0D801D30FAF456200211D36 /* PersonEdit.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -485,6 +500,12 @@
 				35C67C670F2FC0F5005FF6CE /* NoteEditController.m */,
 				35C67BCD0F2FB728005FF6CE /* NoteListController.h */,
 				35C67BCE0F2FB728005FF6CE /* NoteListController.m */,
+				D0D801B90FAF414B00211D36 /* PersonListController.h */,
+				D0D801BA0FAF414B00211D36 /* PersonListController.m */,
+				D0D801D60FAF45FD00211D36 /* PersonEditController.h */,
+				D0D801D70FAF45FD00211D36 /* PersonEditController.m */,
+				D0D802BD0FAF65BD00211D36 /* PersonViewController.h */,
+				D0D802BE0FAF65BD00211D36 /* PersonViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -494,6 +515,8 @@
 			children = (
 				35C67C0A0F2FB8D3005FF6CE /* Note.h */,
 				35C67C0B0F2FB8D3005FF6CE /* Note.m */,
+				D0D801B60FAF3FE900211D36 /* Person.h */,
+				D0D801B70FAF3FE900211D36 /* Person.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -542,6 +565,7 @@
 			files = (
 				35C67BEF0F2FB824005FF6CE /* MainWindow.xib in Resources */,
 				35C67C610F2FC063005FF6CE /* NoteEdit.xib in Resources */,
+				D0D801D40FAF456200211D36 /* PersonEdit.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,6 +628,10 @@
 				D0D8FB650FA914D600211D36 /* CWToolbarController.m in Sources */,
 				D0D8FB6E0FA9161C00211D36 /* CollectionViewController.m in Sources */,
 				D0D8FB730FA9169200211D36 /* LoadingView.m in Sources */,
+				D0D801B80FAF3FE900211D36 /* Person.m in Sources */,
+				D0D801BB0FAF414B00211D36 /* PersonListController.m in Sources */,
+				D0D801D80FAF45FD00211D36 /* PersonEditController.m in Sources */,
+				D0D802BF0FAF65BD00211D36 /* PersonViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

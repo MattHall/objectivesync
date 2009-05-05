@@ -10,9 +10,6 @@
 #import "CollectionViewController.h"
 
 @interface NoteListController : CollectionViewController {
-	NSMutableArray *notes;
 }
-
-@property(nonatomic, retain) NSMutableArray *notes;
 
 @end

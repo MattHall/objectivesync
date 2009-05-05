@@ -38,7 +38,8 @@ typedef enum {
 + (NSArray *)findAllRemote;
 + (NSArray *)findAllRemoteWithResponse:(NSError **)aError;
 + (id)findRemote:(NSString *)elementId;
-+ (id)findRemote:(NSString *)elementId withResponse:(NSError **)aError; 
++ (id)findRemote:(NSString *)elementId withResponse:(NSError **)aError;
++ (id)findRemote:(NSString *)elementId withResponse:(NSError **)aError andParent:(NSObject *)parent;
 
 // URL construction accessors
 + (NSString *)getRemoteElementName;

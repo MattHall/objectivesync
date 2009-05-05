@@ -46,33 +46,38 @@
 	for (OSYLog *log in logs) {
 		Class cls = [[NSBundle mainBundle] classNamed:log.loggedClassName];
 		id obj = [cls findByPK:log.loggedPk];
-		id remoteObj = [cls findRemote:[obj getRemoteId] withResponse:&error];
+		id remoteObj;
+		if ([cls instancesRespondToSelector:@selector(parent)]) {
+			remoteObj = [cls findRemote:[obj getRemoteId] withResponse:&error andParent:[obj parent]];
+		} else {
+			remoteObj = [cls findRemote:[obj getRemoteId] withResponse:&error];
+		}
+		
 		if (error.code == 404) {
 			// If you ever try to update a record after it's been dropped into a river of molten lava, let 'em go, because man, they're gone.
 			[obj deleteObjectWithSync:NO];
 			[log deleteObject];
 		} else {
-			if ([cls instancesRespondToSelector:@selector(updatedAt)]) {
-				if ([[obj performSelector:@selector(updatedAt)] isEqualToDate: [remoteObj performSelector:@selector(updatedAt)]]) {
-					// updatedAt exists, and the object on the server hasn't been updated since it was edited on the phone
+			if ([cls instancesRespondToSelector:@selector(updatedAt)]&&
+				[[obj performSelector:@selector(updatedAt)] isEqualToDate: [remoteObj performSelector:@selector(updatedAt)]]) {
+				// updatedAt exists, and the object on the server hasn't been updated since it was edited on the phone
+				if ([obj saveRemote]) {
+					[obj saveWithSync:NO];
+					[log deleteObject];
+				}
+			} else {
+				if ([cls instancesRespondToSelector:@selector(merge:)]) {
+					// if the merge function exists, try to merge the two objects and save that
+					[obj performSelector:@selector(merge:) withObject:remoteObj];
 					if ([obj saveRemote]) {
 						[obj saveWithSync:NO];
 						[log deleteObject];
 					}
 				} else {
-					if ([cls instancesRespondToSelector:@selector(merge:)]) {
-						// if the merge function exists, try to merge the two objects and save that
-						[obj performSelector:@selector(merge:) withObject:remoteObj];
-						if ([obj saveRemote]) {
-							[obj saveWithSync:NO];
-							[log deleteObject];
-						}
-					} else {
-						// it's been updated, and we can't merge, so trash the log and update the object
-						[(SQLitePersistentObject *)remoteObj setPk:[obj pk]];
-						[remoteObj saveWithSync:NO]; // replaces the local obj with remoteObj in DB
-						[log deleteObject];
-					}
+					// it's been updated, and we can't merge, so trash the log and update the object
+					[(SQLitePersistentObject *)remoteObj setPk:[obj pk]];
+					[remoteObj saveWithSync:NO]; // replaces the local obj with remoteObj in DB
+					[log deleteObject];
 				}
 			}
 		}

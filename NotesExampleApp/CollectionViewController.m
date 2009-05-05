@@ -8,10 +8,14 @@
 
 #import "CollectionViewController.h"
 #import "ConnectionManager.h"
+#import "SQLitePersistentObject.h"
+#import "OSYSync.h"
+#import "OSYService.h"
+#import "ObjectiveSupport.h"
 
 
 @implementation CollectionViewController
-@synthesize toolbarItems, loadingView;
+@synthesize toolbarItems, loadingView, collection, parent;
 
 - (void) loadStarted {
 	[self.loadingView startAnimating];
@@ -27,7 +31,37 @@
 }
 
 - (void) asyncLoadCollection {
+	OSYSync *sync = [[OSYSync alloc] init];
+	NSError *error = [[NSError alloc] init];
+	NSNumber *status = [[[NSNumber alloc] init] autorelease];
+	[sync runSync];
 	
+	if (self.parent==nil) {
+		NSArray *remote = [[self classRepresented] findAllRemoteWithResponse:&error];
+		self.collection = [sync runCollectionSyncWithLocal:[[self classRepresented] findByCriteria:@""] 
+												 andRemote:remote
+												 withError:error
+													status:&status];
+	} else {
+		NSString *remoteFind = [NSString stringWithFormat:@"%@/%@",[parent getRemoteId],[[self classRepresented] getRemoteCollectionName]];
+		NSString *findByCriteria = [NSString stringWithFormat:@"WHERE %@ = '%@'",[[parent getRemoteClassIdName] underscore],[parent getRemoteId]];
+		
+		NSArray *remote = [[self.parent class] findRemote:remoteFind withResponse:&error];
+		self.collection = [sync runCollectionSyncWithLocal:[[self classRepresented] findByCriteria:findByCriteria] 
+												 andRemote:remote
+												 withError:error
+													status:&status];
+	}
+	
+	[sync release];
+	[error release];
+	
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(loadCompleted:) withObject:status waitUntilDone:NO];
+}
+
+- (Class) classRepresented {
+	return [NSObject class];
 }
 
 - (void) syncCompleteWithSuccess:(BOOL)success {
@@ -40,8 +74,34 @@
 	self.toolbarItems = [self setupToolbarItems];
 	
 	[self loadCollection];
+	[OSYService instance].delegate = self;
     
 	[super viewWillAppear:animated];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [collection count];
+}
+
+- (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		[aTableView beginUpdates];
+		
+		[aTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
+						  withRowAnimation:YES];
+		
+		[(SQLitePersistentObject *)[collection objectAtIndex:indexPath.row] deleteObject];
+		[collection removeObject:[collection objectAtIndex:indexPath.row]];
+		
+		[aTableView endUpdates];
+	}
+	
 }
 
 - (NSArray *)setupToolbarItems {
@@ -56,6 +116,7 @@
 }
 
 - (void)dealloc {
+	[collection release];
 	[loadingView release];
 	[toolbarItems release];
     [super dealloc];

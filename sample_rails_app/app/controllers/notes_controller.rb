@@ -1,8 +1,10 @@
 class NotesController < ApplicationController
+  before_filter :load_person
+  
   # GET /notes
   # GET /notes.xml
   def index
-    @notes = Note.find(:all)
+    @notes = Note.find_all_by_person_id(@person.id)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -41,12 +43,13 @@ class NotesController < ApplicationController
   # POST /notes.xml
   def create
     @note = Note.new(params[:note])
+    @note.person = @person
 
     respond_to do |format|
       if @note.save
         flash[:notice] = 'Note was successfully created.'
-        format.html { redirect_to(@note) }
-        format.xml  { render :xml => @note, :status => :created, :location => @note }
+        format.html { redirect_to(person_notes_path(@person)) }
+        format.xml  { render :xml => @note, :status => :created, :location => person_note_path(@person, @note) }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @note.errors, :status => :unprocessable_entity }
@@ -62,7 +65,7 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.update_attributes(params[:note])
         flash[:notice] = 'Note was successfully updated.'
-        format.html { redirect_to(@note) }
+        format.html { redirect_to(person_notes_path(@person)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -78,8 +81,14 @@ class NotesController < ApplicationController
     @note.destroy
 
     respond_to do |format|
-      format.html { redirect_to(notes_url) }
+      format.html { redirect_to(person_notes_url(@person)) }
       format.xml  { head :ok }
     end
+  end
+  
+  private
+  
+  def load_person
+    @person = Person.find(params[:person_id])
   end
 end

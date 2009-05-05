@@ -7,14 +7,14 @@
 //
 
 #import "Note.h"
+#import "Person.h"
 
 @implementation Note
 
-@synthesize noteText, noteId, createdAt, updatedAt;
+@synthesize noteText, noteId, personId, createdAt, updatedAt;
 
 -(void)merge:(Note *)with {
 	self.noteText = with.noteText;
-	self.noteId = with.noteId;
 	self.createdAt = with.createdAt;
 	self.updatedAt = with.updatedAt;
 	/*
@@ -28,6 +28,34 @@
 	*/
 }
 
+- (SQLitePersistentObject *)parent {
+	return [Person findFirstByCriteria:[NSString stringWithFormat:@"WHERE person_id = '%@'", self.personId]];
+}
+
+- (NSString *)remoteFindBase {
+	return [NSString stringWithFormat:@"%@/%@",self.personId,[Note getRemoteCollectionName]];	
+}
+
+- (BOOL)createRemoteWithResponse:(NSError **)aError {
+	return [self createRemoteAtPath:[Person getRemoteElementPath:[self nestedPath]] withResponse:aError];
+}
+
+- (BOOL)updateRemoteWithResponse:(NSError **)aError {
+	return [self updateRemoteAtPath:[Person getRemoteElementPath:[self nestedPath]] withResponse:aError];	
+}
+
+- (BOOL)destroyRemoteWithResponse:(NSError **)aError {
+	return [self destroyRemoteAtPath:[Person getRemoteElementPath:[self nestedPath]] withResponse:aError];
+}
+
+-(NSString *) nestedPath {
+	NSString *path = [NSString stringWithFormat:@"%@/%@",self.personId,[[self class] getRemoteCollectionName],nil];
+	if(self.noteId) {
+		path = [path stringByAppendingFormat:@"/%@",self.noteId,nil];
+	}
+	return path;
+}
+
 #pragma mark cleanup
 - (void) dealloc
 {
@@ -35,6 +63,7 @@
 	[updatedAt release];
 	[noteText release];
 	[noteId release];
+	[personId release];
 	[super dealloc];
 }
 

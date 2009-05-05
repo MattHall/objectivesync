@@ -127,6 +127,16 @@ static ORSResponseFormat _format;
 	return [self performSelector:[self getRemoteParseDataMethod] withObject:res.body];
 }
 
++ (id)findRemote:(NSString *)elementId withResponse:(NSError **)aError andParent:(NSObject *)parent {
+	elementId = [NSString stringWithFormat:@"%@/%@/%@/%@", [[parent class] getRemoteCollectionName], [parent getRemoteId], [self getRemoteCollectionName], elementId];
+	NSString *path = [NSString stringWithFormat:@"%@%@%@", [self getRemoteSite], elementId, [self getRemoteProtocolExtension]];
+	Response *res = [Connection get:path withUser:[[self class] getRemoteUser] andPassword:[[self class]  getRemotePassword]];
+	if([res isError] && aError) {
+		*aError = res.error;
+	}
+	return [self performSelector:[self getRemoteParseDataMethod] withObject:res.body];
+}
+
 + (id)findRemote:(NSString *)elementId {
 	NSError *aError;
 	return [self findRemote:elementId withResponse:&aError];
