@@ -5,6 +5,8 @@ class NotesController < ApplicationController
   # GET /notes.xml
   def index
     @notes = Note.find_all_by_person_id(@person.id)
+    
+    sleep 2
 
     respond_to do |format|
       format.html # index.html.erb

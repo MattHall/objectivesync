@@ -97,7 +97,7 @@
 }
 
 -(NSMutableArray *)runCollectionSyncWithLocal:(NSArray *)local andRemote:(NSArray *)remote withError:(NSError *)error status:(NSNumber **)status {
-	if (error.code != -1004) {
+	if (error.code == 0 || (error.code >= 200 && error.code < 400)) {
 		NSMutableArray *newCollection = [[NSMutableArray alloc] initWithCapacity:[remote count]];
 		
 		// this could probably be faster, but at least it's clean
