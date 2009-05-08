@@ -1,1 +1,1 @@
-test
+You'll notice while using the sample application that about 15% of all XML requests fail, and about 2 seconds of latency is added to each request.  This is to simulate more accurately cellular internet access for testing purposes.  You can verify request failure was intentionally caused by checking for the "Simulated Failure!" message in the console.

@@ -273,7 +273,16 @@ static id<ORCDataChangedDelegate>__delegate;
 	NSString *deleteQuery = [NSString stringWithFormat:@"DELETE FROM %@ WHERE pk = %d", [[self class] tableName], pk];
 	
 	[[SQLiteInstanceManager sharedManager] executeQuery:deleteQuery];
-	if (sync) [__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
+	
+	// we need info about the parent to perform a nested delete
+	if (sync) {
+		if ([self respondsToSelector:@selector(parent)]) {
+			[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] 
+							andParent:[self performSelector:@selector(parent)] was:DeletedAction];
+		} else {
+			[__delegate objectOfClass:self.class withPk:pk andRemoteId:[self getRemoteId] was:DeletedAction];
+		}
+	}
 
 }
 #pragma mark -

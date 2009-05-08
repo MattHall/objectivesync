@@ -50,21 +50,21 @@
 
 - (void)startAnimating {
 	updatedLabel.text = nil;
-	label.text = @"Loading...";
+	label.text = @"Updating...";
 	[indicator startAnimating];
 }
 
-- (void)stopAnimating:(NSNumber *)status {
+- (void)stopAnimating:(BOOL)status {
 	NSDate *today = [NSDate date];
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init]  autorelease];
 	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	
 	label.text = nil;
-	if ([status isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+	if (status) {
 		updatedLabel.text = [[NSString stringWithString:@"Updated "] stringByAppendingString:[dateFormatter stringFromDate:today]];
 	} else {
-		updatedLabel.text = @"Sync Failed";
+		updatedLabel.text = @"Update Failed";
 	}
 	[indicator stopAnimating];
 }

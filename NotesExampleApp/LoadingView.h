@@ -20,7 +20,7 @@
 @property (retain) UILabel *updatedLabel;
 
 - (void)startAnimating;
-- (void)stopAnimating:(NSNumber *)status;
+- (void)stopAnimating:(BOOL)status;
 - (id)initWithLoadingView;
 
 @end

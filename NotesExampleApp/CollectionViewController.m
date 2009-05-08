@@ -22,7 +22,12 @@
 }
 
 - (void) loadCompleted:(NSNumber *)status {
-	[self.loadingView stopAnimating:status];
+	// sleep(5); // we intentionally block the main thread while the data is reloaded
+	if ([status boolValue]) {
+		self.collection = [[self collectionFromSQL] mutableCopy];
+		[self.tableView reloadData];
+	}
+	[self.loadingView stopAnimating:[status boolValue]];
 }
 
 - (void) loadCollection {
@@ -31,33 +36,31 @@
 }
 
 - (void) asyncLoadCollection {
-	OSYSync *sync = [[OSYSync alloc] init];
-	NSError *error = [[NSError alloc] init];
-	NSNumber *status = [[[NSNumber alloc] init] autorelease];
-	[sync runSync];
-	
+	// this syncs local reads, writes, and updates, then gets the newest data from the server
+	// and merges it with the local data
+	if ([[OSYService instance] runCollectionSync]) {
+		[self performSelectorOnMainThread:@selector(loadCompleted:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:YES];
+	} else {
+		[self performSelectorOnMainThread:@selector(loadCompleted:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:YES];
+	}
+}
+
+- (NSArray *) collectionFromSQL {
 	if (self.parent==nil) {
-		NSArray *remote = [[self classRepresented] findAllRemoteWithResponse:&error];
-		self.collection = [sync runCollectionSyncWithLocal:[[self classRepresented] findByCriteria:@""] 
-												 andRemote:remote
-												 withError:error
-													status:&status];
+		return [[self classRepresented] findByCriteria:@""];
+	} else {
+		NSString *findByCriteria = [NSString stringWithFormat:@"WHERE %@ = '%@'",[[parent getRemoteClassIdName] underscore],[parent getRemoteId]];
+		return [[self classRepresented] findByCriteria:findByCriteria];
+	}
+}
+
+- (NSArray *) collectionFromRemoteWithResponse:(NSError **)error {
+	if (self.parent==nil) {
+		return [[self classRepresented] findAllRemoteWithResponse:error];
 	} else {
 		NSString *remoteFind = [NSString stringWithFormat:@"%@/%@",[parent getRemoteId],[[self classRepresented] getRemoteCollectionName]];
-		NSString *findByCriteria = [NSString stringWithFormat:@"WHERE %@ = '%@'",[[parent getRemoteClassIdName] underscore],[parent getRemoteId]];
-		
-		NSArray *remote = [[self.parent class] findRemote:remoteFind withResponse:&error];
-		self.collection = [sync runCollectionSyncWithLocal:[[self classRepresented] findByCriteria:findByCriteria] 
-												 andRemote:remote
-												 withError:error
-													status:&status];
+		return [[self.parent class] findRemote:remoteFind withResponse:error];
 	}
-	
-	[sync release];
-	[error release];
-	
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-	[self performSelectorOnMainThread:@selector(loadCompleted:) withObject:status waitUntilDone:NO];
 }
 
 - (Class) classRepresented {
@@ -73,7 +76,12 @@
 - (void)viewWillAppear:(BOOL)animated {
 	self.toolbarItems = [self setupToolbarItems];
 	
+	self.collection = [[self collectionFromSQL] mutableCopy];
+	[self.tableView reloadData];
+	
 	[self loadCollection];
+	
+	// Always ensure the current view controller is responsible for the OSYService
 	[OSYService instance].delegate = self;
     
 	[super viewWillAppear:animated];
@@ -100,6 +108,7 @@
 		[collection removeObject:[collection objectAtIndex:indexPath.row]];
 		
 		[aTableView endUpdates];
+		[self loadCollection];
 	}
 	
 }

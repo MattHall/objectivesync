@@ -19,4 +19,13 @@
 	}
 }
 
+- (void) objectOfClass:(Class)cls withPk:(int)pk andRemoteId:(NSString *)remoteId andParent:(id)parent was:(ORCActionTypes)action {
+	if (![[cls className] isEqualTo:@"OSYLog"]) {
+		[OSYLog logAction:action toDBWithClass:cls andRemoteId:remoteId andPk:pk 
+			  andParentId:[parent getRemoteId] 
+		      andParentClass:[parent className]];
+		[[OSYService instance] dataChanged];
+	}
+}
+
 @end

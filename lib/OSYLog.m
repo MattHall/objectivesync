@@ -18,7 +18,7 @@
 
 @implementation OSYLog
 
-@synthesize loggedClassName, loggedPk, loggedAction, loggedAt, remoteId;
+@synthesize loggedClassName, loggedPk, loggedAction, loggedAt, remoteId, parentId, parentFieldName;
 
 +(NSArray *)findByAction:(ORCActionTypes)action {
 	return [self findByCriteria:[NSString stringWithFormat:@"WHERE logged_action=%d",action]];
@@ -38,11 +38,21 @@
 	  andRemoteId:(NSString *)loggedRemoteId andPk:(int)loggedPk 
 
 {
+	[self logAction:action toDBWithClass:loggedClass andRemoteId:loggedRemoteId andPk:loggedPk
+		andParentId:nil andParentClass:nil];
+}
+
++(void) logAction:(ORCActionTypes)action toDBWithClass:(Class)loggedClass 
+	  andRemoteId:(NSString *)loggedRemoteId andPk:(int)loggedPk andParentId:(NSString *)loggedParentId
+	  andParentClass:(NSString *)loggedParentFieldName
+{
 	OSYLog *log = [[[OSYLog alloc] init] autorelease];
 	log.loggedAction = action;
 	log.loggedClassName = [loggedClass className];
 	log.loggedPk = loggedPk;
 	log.loggedAt = [NSDate date];
+	log.parentId = loggedParentId;
+	log.parentFieldName = loggedParentFieldName;
 	log.remoteId = loggedRemoteId;
 	[log save];
 }
@@ -54,6 +64,8 @@
 	[loggedClassName release];
 	[loggedAt release];
 	[remoteId release];
+	[parentId release];
+	[parentFieldName release];
 	[super dealloc];
 }
 

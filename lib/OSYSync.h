@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OSYSyncDelegate.h"
 
 
 @interface OSYSync : NSObject {
 }
 
--(void)runSync;
--(NSMutableArray *)runCollectionSyncWithLocal:(NSArray *)local andRemote:(NSArray *)remote withError:(NSError *)error status:(NSNumber **)status;
+-(BOOL)runSync;
+-(BOOL)syncNeeded;
+-(BOOL)runCollectionSyncWithDelegate:(NSObject<OSYSyncDelegate> *)delegate;
 
 @end

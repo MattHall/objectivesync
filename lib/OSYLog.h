@@ -16,6 +16,8 @@
 	int loggedAction;
 	NSDate *loggedAt;
 	NSString *remoteId;
+	NSString *parentId;
+	NSString *parentFieldName;
 	
 }
 
@@ -24,11 +26,16 @@
 @property(nonatomic) int loggedAction;
 @property(nonatomic, retain) NSDate *loggedAt;
 @property(nonatomic, retain) NSString *remoteId;
+@property(nonatomic, retain) NSString *parentId;
+@property(nonatomic, retain) NSString *parentFieldName;
 
 /*! log an object that was Created, Deleted or Updated */
 +(void) logAction:(ORCActionTypes)action toDBWithClass:(Class)loggedClass 
 	  andRemoteId:(NSString *)loggedRemoteId andPk:(int)loggedPk;
 
++(void) logAction:(ORCActionTypes)action toDBWithClass:(Class)loggedClass 
+	  andRemoteId:(NSString *)loggedRemoteId andPk:(int)loggedPk andParentId:(NSString *)parentId
+	  andParentClass:(NSString *)parentFieldName;
 
 //finders
 +(NSArray *)newlyCreated;

@@ -13,14 +13,17 @@
 @interface OSYService : NSObject {
 
 	NSObject<OSYSyncDelegate> *delegate;
+	int retries;
 	
 }
 
 @property(nonatomic, retain) NSObject<OSYSyncDelegate> *delegate;
+@property int retries;
 
 +(void)setupWithSyncDelegate:(NSObject<OSYSyncDelegate> *)delegate;
 +(OSYService *)instance;
 
 -(void)dataChanged;
+-(BOOL)runCollectionSync;
 
 @end

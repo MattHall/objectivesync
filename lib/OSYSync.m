@@ -7,28 +7,35 @@
 //
 
 #import "OSYSync.h"
+#import "OSYSyncDelegate.h"
 #import "OSYLog.h"
 #import "ObjectiveResource.h"
 #import "SQLitePersistentObject.h"
 
 @interface OSYSync()
 
--(void)syncCreated;
--(void)syncUpdated;
--(void)syncDeleted;
+-(BOOL)syncCreated;
+-(BOOL)syncUpdated;
+-(BOOL)syncDeleted;
 
 @end
 
 
 @implementation OSYSync
 
--(void)runSync {
-	[self syncCreated];
-	[self syncUpdated];
-	[self syncDeleted];
+-(BOOL)syncNeeded {
+	return ([[OSYLog newlyCreated] count] > 0 ||
+			[[OSYLog newlyUpdated] count] > 0 ||
+			[[OSYLog newlyDeleted] count] > 0);
 }
 
--(void) syncCreated {
+-(BOOL)runSync {
+	return ([self syncCreated] && 
+			[self syncUpdated] &&
+			[self syncDeleted]);
+}
+
+-(BOOL) syncCreated {
 	NSArray *logs = [OSYLog newlyCreated];
 	for (OSYLog *log in logs) {
 		Class cls = [[NSBundle mainBundle] classNamed:log.loggedClassName];
@@ -36,11 +43,14 @@
 		if ([obj saveRemote]) {
 			[obj saveWithSync:NO];
 			[log deleteObject];
+		} else {
+			return NO;
 		}
 	}
+	return YES;
 }
 
--(void) syncUpdated {
+-(BOOL) syncUpdated {
 	NSError *error = [[[NSError alloc] init] autorelease];
 	NSArray *logs = [OSYLog newlyUpdated];
 	for (OSYLog *log in logs) {
@@ -57,13 +67,15 @@
 			// If you ever try to update a record after it's been dropped into a river of molten lava, let 'em go, because man, they're gone.
 			[obj deleteObjectWithSync:NO];
 			[log deleteObject];
-		} else {
+		} else if (error.code == 0 || (error.code >= 200 && error.code < 400)) {
 			if ([cls instancesRespondToSelector:@selector(updatedAt)]&&
 				[[obj performSelector:@selector(updatedAt)] isEqualToDate: [remoteObj performSelector:@selector(updatedAt)]]) {
 				// updatedAt exists, and the object on the server hasn't been updated since it was edited on the phone
 				if ([obj saveRemote]) {
 					[obj saveWithSync:NO];
 					[log deleteObject];
+				} else {
+					return NO;
 				}
 			} else {
 				if ([cls instancesRespondToSelector:@selector(merge:)]) {
@@ -72,6 +84,8 @@
 					if ([obj saveRemote]) {
 						[obj saveWithSync:NO];
 						[log deleteObject];
+					} else {
+						return NO;
 					}
 				} else {
 					// it's been updated, and we can't merge, so trash the log and update the object
@@ -80,25 +94,42 @@
 					[log deleteObject];
 				}
 			}
+		} else {
+			return NO;
 		}
 	}
+	return YES;
 }
 
--(void) syncDeleted {
+-(BOOL) syncDeleted {
 	NSArray *deleted = [OSYLog newlyDeleted];
 	for (OSYLog *log in deleted) {
 		Class cls = [[NSBundle mainBundle] classNamed:log.loggedClassName];
 		id obj = [[[cls alloc] init] autorelease];
 		[obj setRemoteId:log.remoteId];
+		
+		// we need to set this information so that we can properly handle nested deletes
+		if (log.parentFieldName != nil) {
+			SEL setter = NSSelectorFromString([NSString stringWithFormat:@"set%@Id:",log.parentFieldName]);
+			[obj performSelector:setter withObject:log.parentId];
+		}
+		
 		if ([obj destroyRemote]) {
 			[log deleteObject];
+		} else {
+			return NO;
 		}
 	}
+	return YES;
 }
 
--(NSMutableArray *)runCollectionSyncWithLocal:(NSArray *)local andRemote:(NSArray *)remote withError:(NSError *)error status:(NSNumber **)status {
-	if (error.code == 0 || (error.code >= 200 && error.code < 400)) {
-		NSMutableArray *newCollection = [[NSMutableArray alloc] initWithCapacity:[remote count]];
+-(BOOL)runCollectionSyncWithDelegate:(NSObject<OSYSyncDelegate> *)delegate {
+	NSError *error = [[[NSError alloc] init] autorelease];
+	
+	NSArray *local = [delegate collectionFromSQL];
+	NSArray *remote = [delegate collectionFromRemoteWithResponse:&error];
+	
+	if (error.code == 0 || (error.code >= 200 && error.code < 400) && ![self syncNeeded]) {
 		
 		// this could probably be faster, but at least it's clean
 		NSMutableDictionary *localDictionary = [[NSMutableDictionary alloc] initWithCapacity:[local count]];
@@ -120,9 +151,6 @@
 			[[remoteDictionary objectForKey:key] saveWithSync:NO];
 			[localDictionary setObject:[remoteDictionary objectForKey:key] forKey:key];
 		}
-		for (id key in localDictionary) {
-			[newCollection addObject:[localDictionary objectForKey:key]];
-		}
 		
 		// change objects that have been changed on server
 		NSMutableArray *keysOnServerAndClient = [NSMutableArray arrayWithArray:[localDictionary allKeys]];
@@ -138,13 +166,9 @@
 		[localDictionary release];
 		[remoteDictionary release];
 		
-		*status = [NSNumber numberWithBool:YES]; 
-		
-		return newCollection;
+		return YES;
 	} else {
-		*status = [NSNumber numberWithBool:NO]; 
-		
-		return [NSMutableArray arrayWithArray:local];
+		return NO;
 	}
 }
 

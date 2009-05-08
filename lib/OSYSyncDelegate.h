@@ -9,5 +9,8 @@
 @protocol OSYSyncDelegate
 
 - (void) syncCompleteWithSuccess:(BOOL)success;
+- (NSArray *) collectionFromSQL;
+- (NSArray *) collectionFromRemoteWithResponse:(NSError **)error;
+
 
 @end
